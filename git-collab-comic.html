@@ -8,131 +8,298 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
   body{
-    font-family:'Segoe UI','Malgun Gothic',system-ui,sans-serif;
-    overflow:hidden; color:#2b2340;
-    background:
-      radial-gradient(circle at 8px 8px, rgba(43,35,64,.07) 2px, transparent 2.5px) 0 0/26px 26px,
-      linear-gradient(180deg,#fdf6e3 0%,#ffe9c7 60%,#ffd9a8 100%);
+    font-family:'Comic Sans MS','Malgun Gothic',cursive,sans-serif;
+    overflow:hidden;color:#1c1408;
+    background:linear-gradient(180deg,#7ed6f2 0%,#a8e6f7 52%,#8fd45e 52.5%,#6fbf45 100%);
   }
-  /* ── 제목 ── */
-  header{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:12px;pointer-events:none}
-  h1{
-    display:inline-block;font-size:clamp(18px,4vw,30px);font-weight:900;letter-spacing:1px;
-    color:#ff5d3a;text-shadow:2px 2px 0 #2b2340;
-    background:#fff;border:3px solid #2b2340;border-radius:14px;padding:6px 22px;
-    box-shadow:5px 5px 0 rgba(43,35,64,.9);transform:rotate(-1.5deg);
-  }
-  /* ── 무대 ── */
-  #stage{position:absolute;inset:0;overflow:hidden}
+  /* 무대 전체에 '꿈틀거리는 선' 필터 */
+  #stage{position:absolute;inset:0;overflow:hidden;filter:url(#wobble)}
   #stage.shake{animation:shake .5s}
   @keyframes shake{
-    0%,100%{transform:none}20%{transform:translate(-12px,4px) rotate(-1deg)}
-    40%{transform:translate(10px,-6px) rotate(1deg)}60%{transform:translate(-8px,2px)}80%{transform:translate(8px,-2px)}
+    0%,100%{transform:none}20%{transform:translate(-13px,5px) rotate(-1.2deg)}
+    40%{transform:translate(11px,-7px) rotate(1.2deg)}60%{transform:translate(-9px,3px)}80%{transform:translate(9px,-3px)}
   }
+  /* 배경 소품 */
+  #sun{position:absolute;top:4%;left:5%;width:clamp(70px,11vw,120px)}
+  .bgcloud{position:absolute;width:clamp(80px,13vw,150px);opacity:.9}
+  #fence{position:absolute;left:-2%;right:-2%;top:46.5%;height:clamp(40px,7vw,64px)}
+  /* 제목 */
+  header{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:10px;pointer-events:none}
+  h1{
+    display:inline-block;font-size:clamp(17px,3.6vw,28px);font-weight:900;letter-spacing:1px;
+    color:#e8452c;background:#fff8e1;border:4px solid #1c1408;border-radius:4px 22px 6px 18px;
+    padding:6px 22px;box-shadow:6px 6px 0 rgba(28,20,8,.85);transform:rotate(-1.6deg);
+  }
+  /* 배우들 */
   .actor{position:absolute;text-align:center;transition:transform .4s}
-  .actor .face{font-size:clamp(48px,9vw,84px);line-height:1;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}
+  .actor svg.chr{width:clamp(92px,15vw,160px);height:auto;display:block;margin:0 auto}
   .actor .tag{
-    display:inline-block;margin-top:6px;font-weight:800;font-size:clamp(11px,2vw,15px);
-    background:#2b2340;color:#fff;border-radius:999px;padding:3px 12px;
+    display:inline-block;margin-top:2px;font-weight:900;font-size:clamp(11px,1.9vw,15px);
+    background:#1c1408;color:#fff8e1;border-radius:3px 12px 4px 10px;padding:3px 12px;transform:rotate(1deg);
   }
-  #cloud{top:9%;left:50%;transform:translateX(-50%)}
-  #wa{bottom:16%;left:12%}
-  #wb{bottom:16%;right:12%}
-  #wa .tag{background:#1d6fd8}#wb .tag{background:#0f9d6a}
-  .desk{font-size:clamp(30px,5.5vw,52px);display:block;margin-top:-6px}
+  #cloud{top:8%;left:50%;transform:translateX(-50%)}
+  #wa{bottom:12%;left:9%}
+  #wb{bottom:12%;right:9%}
+  /* 표정 변형 전환 */
+  .fv{display:none}
+  .actor[data-mood="idle"]  .fv-idle{display:block}
+  .actor[data-mood="shock"] .fv-shock{display:block}
+  .actor[data-mood="sweat"] .fv-sweat{display:block}
+  .actor[data-mood="party"] .fv-party{display:block}
+  .actor[data-mood="angry"] .fv-angry{display:block}
+  .actor[data-mood="proud"] .fv-proud{display:block}
   .jump{animation:jump .55s}
-  @keyframes jump{0%,100%{transform:none}40%{transform:translateY(-26px)}}
-  .tremble{animation:tremble .18s infinite}
-  @keyframes tremble{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
-  /* ── 말풍선 ── */
+  @keyframes jump{0%,100%{transform:none}40%{transform:translateY(-30px)}}
+  #wa.jump,#wb.jump{animation:jump .55s}
+  #cloud.jump{animation:cjump .55s}
+  @keyframes cjump{0%,100%{transform:translateX(-50%)}40%{transform:translateX(-50%) translateY(-22px)}}
+  .tremble{animation:tremble .16s infinite}
+  @keyframes tremble{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+  /* 말풍선 — 손그림 타원 */
   .bubble{
-    position:absolute;max-width:min(46vw,300px);z-index:15;
-    background:#fff;border:3px solid #2b2340;border-radius:16px;
-    padding:9px 14px;font-size:clamp(12px,2.4vw,17px);font-weight:700;line-height:1.35;
-    box-shadow:4px 4px 0 rgba(43,35,64,.85);opacity:0;transform:scale(.3);
-    transition:opacity .25s,transform .25s;
+    position:absolute;max-width:min(48vw,300px);z-index:15;
+    background:#fff8e1;border:3.5px solid #1c1408;
+    border-radius:48% 52% 55% 45% / 58% 48% 52% 42%;
+    padding:13px 18px;font-size:clamp(12px,2.3vw,16px);font-weight:700;line-height:1.35;
+    opacity:0;transform:scale(.3) rotate(-2deg);transition:opacity .22s,transform .22s;
   }
-  .bubble.show{opacity:1;transform:scale(1)}
+  .bubble.show{opacity:1;transform:scale(1) rotate(-2deg)}
   .bubble::after{
-    content:'';position:absolute;bottom:-14px;left:34px;border:8px solid transparent;
-    border-top:12px solid #2b2340;
+    content:'';position:absolute;bottom:-16px;left:36px;width:20px;height:20px;
+    background:#fff8e1;border-right:3.5px solid #1c1408;border-bottom:3.5px solid #1c1408;
+    transform:skewX(28deg) rotate(38deg);
   }
-  .bubble.flip::after{left:auto;right:34px}
-  .bubble.up::after{bottom:auto;top:-20px;border-top-color:transparent;border-bottom:12px solid #2b2340}
-  .bubble.scream{background:#fff23b;transform:scale(.3) rotate(-3deg)}
-  .bubble.scream.show{transform:scale(1.08) rotate(-3deg)}
-  /* ── 날아다니는 것들 ── */
-  .pkg{position:absolute;z-index:12;font-size:clamp(26px,5vw,44px);transition:all 1.1s cubic-bezier(.45,-0.2,.55,1.2);filter:drop-shadow(0 4px 5px rgba(0,0,0,.3))}
+  .bubble.flip::after{left:auto;right:36px;transform:skewX(-28deg) rotate(-38deg)}
+  .bubble.up::after{bottom:auto;top:-16px;border:0;border-left:3.5px solid #1c1408;border-top:3.5px solid #1c1408;transform:skewX(-24deg) rotate(-38deg)}
+  .bubble.scream{
+    background:#ffe23b;border-radius:8% 92% 12% 88% / 85% 15% 90% 10%;
+    border-width:4px;font-weight:900;
+  }
+  .bubble.scream.show{transform:scale(1.07) rotate(-3deg)}
+  .bubble b{color:#e8452c}
+  /* 날아다니는 커밋 상자 */
+  .pkg{position:absolute;z-index:12;width:clamp(34px,5.5vw,52px);transition:all 1.1s cubic-bezier(.45,-0.25,.55,1.25)}
+  .pkg svg{width:100%;height:auto;display:block}
   .pkg .plabel{
-    position:absolute;top:-14px;left:50%;transform:translateX(-50%);
-    font-size:10px;font-weight:800;background:#2b2340;color:#fff;border-radius:999px;padding:1px 8px;white-space:nowrap;
+    position:absolute;top:-15px;left:50%;transform:translateX(-50%) rotate(-2deg);
+    font-size:10px;font-weight:900;background:#1c1408;color:#fff8e1;border-radius:2px 8px 3px 7px;padding:1px 8px;white-space:nowrap;
   }
-  /* ── 충돌 파일 ── */
+  /* 충돌 파일 */
   #paper{
-    position:absolute;z-index:14;left:50%;top:44%;transform:translate(-50%,-50%) scale(0);
-    transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+    position:absolute;z-index:14;left:50%;top:43%;transform:translate(-50%,-50%) scale(0);
+    transition:transform .5s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
   }
   #paper.show{transform:translate(-50%,-50%) scale(1)}
   .half{
-    display:inline-block;background:#fff;border:3px solid #2b2340;padding:12px 14px;
-    font-weight:800;font-size:clamp(12px,2.4vw,17px);transition:transform .5s;position:relative;
+    display:inline-block;background:#fff8e1;border:3.5px solid #1c1408;padding:13px 15px;
+    font-weight:900;font-size:clamp(12px,2.3vw,17px);position:relative;transition:transform .5s;
   }
-  .half.l{border-radius:12px 0 0 12px;border-right:2px dashed #ff5d3a;color:#1d6fd8}
-  .half.r{border-radius:0 12px 12px 0;border-left:0;color:#0f9d6a}
-  #paper.fight .half.l{animation:tugL .4s infinite}
-  #paper.fight .half.r{animation:tugR .4s infinite}
-  @keyframes tugL{0%,100%{transform:translateX(0) rotate(-2deg)}50%{transform:translateX(-14px) rotate(-4deg)}}
-  @keyframes tugR{0%,100%{transform:translateX(0) rotate(2deg)}50%{transform:translateX(14px) rotate(4deg)}}
-  #paper.merged .half.l{border-right:2px solid transparent}
-  #paper.merged .half{color:#7a3ce8;animation:none;transform:none}
-  /* ── 효과 ── */
+  .half.l{border-radius:14px 2px 4px 16px;border-right:3px dashed #e8452c;color:#1d6fd8;transform:rotate(-1.5deg)}
+  .half.r{border-radius:2px 16px 14px 4px;border-left:0;color:#0f8f55;transform:rotate(1.5deg)}
+  #paper.fight .half.l{animation:tugL .38s infinite}
+  #paper.fight .half.r{animation:tugR .38s infinite}
+  @keyframes tugL{0%,100%{transform:translateX(0) rotate(-2.5deg)}50%{transform:translateX(-16px) rotate(-5deg)}}
+  @keyframes tugR{0%,100%{transform:translateX(0) rotate(2.5deg)}50%{transform:translateX(16px) rotate(5deg)}}
+  #paper.merged .half{color:#8a34d8;transform:none;animation:none}
+  #paper.merged .half.l{border-right:3px solid transparent}
+  /* 쾅! 효과 */
   #boom{
-    position:absolute;z-index:18;left:50%;top:42%;transform:translate(-50%,-50%) scale(0);
-    font-size:clamp(60px,14vw,130px);font-weight:900;transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    position:absolute;z-index:18;left:50%;top:40%;width:clamp(180px,34vw,340px);
+    transform:translate(-50%,-50%) scale(0) rotate(-6deg);
+    transition:transform .28s cubic-bezier(.34,1.7,.64,1);
   }
-  #boom.show{transform:translate(-50%,-50%) scale(1)}
-  .confetti{position:absolute;z-index:16;top:-40px;font-size:22px;animation:fall linear forwards}
-  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
-  /* ── 자막 ── */
+  #boom.show{transform:translate(-50%,-50%) scale(1) rotate(-6deg)}
+  /* 색종이(별) */
+  .confetti{position:absolute;z-index:16;top:-50px;animation:fall linear forwards}
+  .confetti svg{width:22px;height:22px}
+  @keyframes fall{to{transform:translateY(115vh) rotate(760deg)}}
+  /* 자막 */
   #caption{
     position:fixed;bottom:0;left:0;right:0;z-index:20;text-align:center;
-    background:rgba(43,35,64,.94);color:#fff;
-    font-size:clamp(13px,2.6vw,19px);font-weight:700;padding:14px 18px 16px;
-    min-height:52px;transition:opacity .3s;
+    background:#1c1408;color:#fff8e1;border-top:4px solid #fff8e1;
+    font-size:clamp(13px,2.5vw,19px);font-weight:700;padding:13px 18px 15px;min-height:52px;transition:opacity .3s;
   }
   #caption b{color:#ffd166}
-  /* ── 버튼 ── */
-  #controls{position:fixed;top:14px;right:14px;z-index:30;display:flex;gap:8px}
-  #controls button{
-    font:inherit;font-weight:800;font-size:14px;cursor:pointer;
-    background:#fff;border:3px solid #2b2340;border-radius:12px;padding:7px 14px;
-    box-shadow:3px 3px 0 rgba(43,35,64,.85);transition:.15s;
+  /* 버튼 */
+  #controls{position:fixed;top:12px;right:12px;z-index:30}
+  #controls button,#endcard button{
+    font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;
+    background:#fff8e1;border:3.5px solid #1c1408;border-radius:4px 14px 5px 12px;padding:8px 16px;
+    box-shadow:4px 4px 0 rgba(28,20,8,.85);transition:.15s;
   }
-  #controls button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(43,35,64,.85)}
+  #controls button:hover{transform:translate(-1px,-1px) rotate(-1deg)}
   #endcard{
-    position:fixed;inset:0;z-index:25;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;
-    background:rgba(43,35,64,.55);backdrop-filter:blur(3px);
+    position:fixed;inset:0;z-index:25;display:none;align-items:center;justify-content:center;
+    background:rgba(28,20,8,.5);
   }
   #endcard .card{
-    background:#fff;border:4px solid #2b2340;border-radius:20px;padding:28px 34px;text-align:center;
-    box-shadow:8px 8px 0 rgba(43,35,64,.9);transform:rotate(-1deg);max-width:86vw;
+    background:#fff8e1;border:5px solid #1c1408;border-radius:6px 26px 8px 22px;
+    padding:30px 36px;text-align:center;box-shadow:9px 9px 0 rgba(28,20,8,.85);
+    transform:rotate(-1.2deg);max-width:86vw;
   }
-  #endcard h2{font-size:clamp(20px,4.5vw,30px);color:#ff5d3a;margin-bottom:10px}
-  #endcard p{font-weight:700;font-size:clamp(13px,2.6vw,17px);line-height:1.6}
-  #endcard button{
-    margin-top:6px;font:inherit;font-weight:900;font-size:16px;cursor:pointer;color:#fff;
-    background:#ff5d3a;border:3px solid #2b2340;border-radius:14px;padding:10px 26px;
-    box-shadow:4px 4px 0 rgba(43,35,64,.9);
-  }
+  #endcard h2{font-size:clamp(20px,4.4vw,30px);color:#e8452c;margin-bottom:10px}
+  #endcard p{font-weight:700;font-size:clamp(13px,2.5vw,17px);line-height:1.65;margin-bottom:14px}
+  #endcard button{background:#e8452c;color:#fff8e1;font-size:17px;padding:10px 26px}
 </style>
 </head>
 <body>
-<header><h1>💥 Git 대소동 — A와 B의 충돌 사건</h1></header>
+
+<!-- 꿈틀거리는 손그림 선 필터 -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="wobble" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.017" numOctaves="2" seed="1" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5"/>
+  </filter>
+</svg>
+
+<header><h1>💢 Git 대소동 — A와 B의 충돌 사건</h1></header>
 
 <div id="stage">
-  <div class="actor" id="cloud"><span class="face" id="cloudFace">☁️</span><span class="tag">GitHub (origin)</span></div>
-  <div class="actor" id="wa"><span class="face" id="waFace">🧑‍💻</span><span class="desk">🖥️</span><span class="tag">작업자 A</span></div>
-  <div class="actor" id="wb"><span class="face" id="wbFace">👩‍💻</span><span class="desk">🖥️</span><span class="tag">작업자 B</span></div>
+  <!-- 배경: 해, 구름, 울타리 -->
+  <svg id="sun" viewBox="0 0 120 120">
+    <g stroke="#1c1408" stroke-width="4" stroke-linecap="round">
+      <circle cx="60" cy="60" r="30" fill="#ffd93b"/>
+      <path d="M60 12 60 26M60 94 60 108M12 60 26 60M94 60 108 60M25 25 35 35M95 25 85 35M25 95 35 85M95 95 85 85" fill="none"/>
+    </g>
+  </svg>
+  <svg class="bgcloud" style="top:11%;right:14%" viewBox="0 0 150 70">
+    <path d="M22 55 Q8 55 10 42 Q12 30 26 32 Q28 16 45 18 Q60 8 74 20 Q92 12 98 28 Q116 26 114 42 Q120 56 100 56 Z"
+          fill="#ffffff" stroke="#1c1408" stroke-width="4"/>
+  </svg>
+  <svg id="fence" viewBox="0 0 1200 64" preserveAspectRatio="none">
+    <g fill="#fff8e1" stroke="#1c1408" stroke-width="3.5">
+      <rect x="0" y="22" width="1200" height="10"/>
+      <rect x="0" y="44" width="1200" height="10"/>
+    </g>
+    <g fill="#fff8e1" stroke="#1c1408" stroke-width="3.5">
+      <path d="M20 8 L48 8 L48 64 L20 64 Z M34 8 L34 0"/>
+      <path d="M140 8 L168 8 L168 64 L140 64 Z"/><path d="M260 8 L288 8 L288 64 L260 64 Z"/>
+      <path d="M380 8 L408 8 L408 64 L380 64 Z"/><path d="M500 8 L528 8 L528 64 L500 64 Z"/>
+      <path d="M620 8 L648 8 L648 64 L620 64 Z"/><path d="M740 8 L768 8 L768 64 L740 64 Z"/>
+      <path d="M860 8 L888 8 L888 64 L860 64 Z"/><path d="M980 8 L1008 8 L1008 64 L980 64 Z"/>
+      <path d="M1100 8 L1128 8 L1128 64 L1100 64 Z"/>
+    </g>
+  </svg>
+
+  <!-- GitHub 구름 캐릭터 -->
+  <div class="actor" id="cloud" data-mood="idle">
+    <svg class="chr" viewBox="0 0 200 120">
+      <path d="M38 96 Q14 98 16 76 Q10 58 32 54 Q34 30 58 34 Q70 12 96 22 Q118 6 136 26 Q166 18 168 46 Q192 50 186 74 Q192 96 164 96 Q150 106 130 98 Q100 112 70 100 Q52 108 38 96 Z"
+            fill="#f4f7fb" stroke="#1c1408" stroke-width="5"/>
+      <!-- 팔 -->
+      <path d="M18 78 Q2 84 6 96" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <path d="M184 76 Q198 84 194 96" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <!-- 표정들 -->
+      <g class="fv fv-idle">
+        <circle cx="82" cy="58" r="5" fill="#1c1408"/><circle cx="122" cy="58" r="5" fill="#1c1408"/>
+        <path d="M88 78 Q102 86 116 78" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <g class="fv fv-party">
+        <path d="M74 58 Q82 50 90 58M114 58 Q122 50 130 58" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+        <path d="M84 74 Q102 92 120 74 Z" fill="#1c1408"/>
+      </g>
+      <g class="fv fv-angry">
+        <path d="M70 46 L92 56M134 46 L112 56" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="84" cy="62" r="4.5" fill="#1c1408"/><circle cx="120" cy="62" r="4.5" fill="#1c1408"/>
+        <path d="M84 84 L92 78 L100 84 L108 78 L116 84" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+        <path d="M96 108 L88 122 L98 120 L92 136" fill="none" stroke="#e8b13b" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <g class="fv fv-proud">
+        <path d="M68 52 h30 v14 h-30 z M106 52 h30 v14 h-30 z M98 58 h8" fill="#1c1408" stroke="#1c1408" stroke-width="3"/>
+        <path d="M88 80 Q102 90 116 80" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <span class="tag">GitHub (origin)</span>
+  </div>
+
+  <!-- 작업자 A : 뾰족머리 + 사각 안경 + 파란 셔츠 -->
+  <div class="actor" id="wa" data-mood="idle">
+    <svg class="chr" viewBox="0 0 150 190">
+      <!-- 머리카락 -->
+      <path d="M45 38 L54 16 L62 34 L72 12 L82 32 L92 14 L100 36 L108 24 L108 46 L45 46 Z"
+            fill="#7a4a1e" stroke="#1c1408" stroke-width="4.5"/>
+      <!-- 얼굴 : 길쭉한 타원 -->
+      <path d="M50 44 Q44 78 52 96 Q60 112 76 110 Q94 108 100 90 Q108 70 102 44 Z"
+            fill="#ffd9a1" stroke="#1c1408" stroke-width="4.5"/>
+      <!-- 귀 -->
+      <path d="M46 70 Q38 72 42 80 Q46 86 50 80" fill="#ffd9a1" stroke="#1c1408" stroke-width="4"/>
+      <!-- 몸: 셔츠 -->
+      <path d="M52 112 L44 166 L106 166 L98 112 Q75 122 52 112 Z" fill="#2f7fe0" stroke="#1c1408" stroke-width="4.5"/>
+      <text x="75" y="150" text-anchor="middle" font-size="26" font-weight="900" fill="#fff8e1" font-family="inherit">A</text>
+      <!-- 팔 -->
+      <path d="M46 120 Q26 132 30 150" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <path d="M104 120 Q124 132 120 150" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <!-- 다리/신발 -->
+      <path d="M62 166 L60 180 M88 166 L90 180" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="57" cy="184" rx="12" ry="5" fill="#1c1408"/><ellipse cx="93" cy="184" rx="12" ry="5" fill="#1c1408"/>
+      <!-- 안경(공통) -->
+      <path d="M52 62 h20 v16 h-20 z M80 62 h20 v16 h-20 z M72 70 h8 M52 66 L46 62" fill="none" stroke="#1c1408" stroke-width="4"/>
+      <!-- 표정들 -->
+      <g class="fv fv-idle">
+        <circle cx="62" cy="70" r="3.5" fill="#1c1408"/><circle cx="90" cy="70" r="3.5" fill="#1c1408"/>
+        <path d="M64 94 Q76 100 88 92" fill="none" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <g class="fv fv-shock">
+        <circle cx="62" cy="70" r="6" fill="#fff" stroke="#1c1408" stroke-width="3"/><circle cx="62" cy="70" r="2" fill="#1c1408"/>
+        <circle cx="90" cy="70" r="6" fill="#fff" stroke="#1c1408" stroke-width="3"/><circle cx="90" cy="70" r="2" fill="#1c1408"/>
+        <ellipse cx="76" cy="96" rx="9" ry="11" fill="#1c1408"/>
+      </g>
+      <g class="fv fv-sweat">
+        <path d="M58 70 L66 72M86 72 L94 70" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <path d="M64 96 h24" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <path d="M108 58 Q114 66 108 70 Q102 66 108 58 Z" fill="#6fc3f2" stroke="#1c1408" stroke-width="3"/>
+      </g>
+      <g class="fv fv-party">
+        <path d="M56 68 Q62 62 68 68M84 68 Q90 62 96 68" fill="none" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <path d="M62 90 Q76 104 90 90 Z" fill="#1c1408"/>
+      </g>
+    </svg>
+    <span class="tag" style="background:#1d6fd8">작업자 A</span>
+  </div>
+
+  <!-- 작업자 B : 포니테일 + 초록 셔츠 + 긴 턱 -->
+  <div class="actor" id="wb" data-mood="idle">
+    <svg class="chr" viewBox="0 0 150 190">
+      <!-- 포니테일 -->
+      <path d="M104 34 Q128 26 126 50 Q124 70 110 66" fill="#3a2a14" stroke="#1c1408" stroke-width="4.5"/>
+      <!-- 앞머리 -->
+      <path d="M44 46 Q40 18 68 16 Q98 12 104 40 L98 46 L88 34 L78 46 L66 34 L56 46 Z"
+            fill="#3a2a14" stroke="#1c1408" stroke-width="4.5"/>
+      <!-- 얼굴 : 턱이 긴 형 -->
+      <path d="M48 44 Q42 70 50 92 Q56 116 74 114 Q92 112 98 88 Q106 66 102 44 Z"
+            fill="#ffcf8f" stroke="#1c1408" stroke-width="4.5"/>
+      <!-- 몸 -->
+      <path d="M52 116 L46 168 L104 168 L98 116 Q75 126 52 116 Z" fill="#18a566" stroke="#1c1408" stroke-width="4.5"/>
+      <text x="75" y="152" text-anchor="middle" font-size="26" font-weight="900" fill="#fff8e1" font-family="inherit">B</text>
+      <path d="M48 124 Q28 136 32 154" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <path d="M102 124 Q122 136 118 154" fill="none" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <path d="M62 168 L60 182 M88 168 L90 182" stroke="#1c1408" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="57" cy="186" rx="12" ry="5" fill="#1c1408"/><ellipse cx="93" cy="186" rx="12" ry="5" fill="#1c1408"/>
+      <!-- 표정들 -->
+      <g class="fv fv-idle">
+        <path d="M56 62 Q62 58 68 62M82 62 Q88 58 94 62" fill="none" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="62" cy="68" r="3.5" fill="#1c1408"/><circle cx="88" cy="68" r="3.5" fill="#1c1408"/>
+        <path d="M62 96 Q75 102 88 94" fill="none" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <g class="fv fv-shock">
+        <circle cx="62" cy="68" r="7" fill="#fff" stroke="#1c1408" stroke-width="3"/><circle cx="62" cy="68" r="2" fill="#1c1408"/>
+        <circle cx="88" cy="68" r="7" fill="#fff" stroke="#1c1408" stroke-width="3"/><circle cx="88" cy="68" r="2" fill="#1c1408"/>
+        <ellipse cx="75" cy="98" rx="10" ry="13" fill="#1c1408"/>
+        <path d="M40 50 L32 42M110 50 L118 42M36 62 L26 60" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <g class="fv fv-sweat">
+        <path d="M56 64 L66 66M84 66 L94 64" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <path d="M62 98 q6 -5 12 0 q6 5 12 0" fill="none" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <path d="M106 56 Q112 64 106 68 Q100 64 106 56 Z" fill="#6fc3f2" stroke="#1c1408" stroke-width="3"/>
+        <path d="M44 52 Q50 60 44 64 Q38 60 44 52 Z" fill="#6fc3f2" stroke="#1c1408" stroke-width="3"/>
+      </g>
+      <g class="fv fv-party">
+        <path d="M56 66 Q62 60 68 66M82 66 Q88 60 94 66" fill="none" stroke="#1c1408" stroke-width="4" stroke-linecap="round"/>
+        <path d="M60 92 Q75 108 90 92 Z" fill="#1c1408"/>
+      </g>
+    </svg>
+    <span class="tag" style="background:#0f8f55">작업자 B</span>
+  </div>
 
   <div class="bubble" id="bubA"></div>
   <div class="bubble flip" id="bubB"></div>
@@ -141,18 +308,23 @@
   <div id="paper">
     <span class="half l" id="halfL">&lt;&lt;&lt; A의 문장</span><span class="half r" id="halfR">B의 문장 &gt;&gt;&gt;</span>
   </div>
-  <div id="boom">💥충돌!!</div>
+
+  <svg id="boom" viewBox="0 0 300 170">
+    <path d="M150 8 L168 52 L214 24 L198 68 L252 62 L212 96 L262 118 L206 122 L226 162 L178 132 L162 168 L146 130 L112 162 L116 118 L64 136 L98 100 L40 92 L96 74 L60 34 L114 56 Z"
+          fill="#ffd93b" stroke="#1c1408" stroke-width="6" stroke-linejoin="round"/>
+    <text x="150" y="105" text-anchor="middle" font-size="44" font-weight="900" fill="#e8452c"
+          font-family="inherit" stroke="#1c1408" stroke-width="1.5">쾅!!</text>
+  </svg>
 </div>
 
 <div id="caption">잠시 후, 사건이 시작됩니다...</div>
-
 <div id="controls"><button id="btnReplay">⟳ 처음부터</button></div>
 
 <div id="endcard">
   <div class="card">
     <h2>— 끝 —</h2>
-    <p>오늘의 교훈 📖<br>“<b>올리기(push) 전에 먼저 받아오세요(pull)</b>”<br>
-    그리고 충돌은 사고가 아니라, <b>사람이 결정할 차례</b>라는 신호!</p>
+    <p>오늘의 교훈 📖<br>“<b style="color:#e8452c">올리기(push) 전에 먼저 받아오세요(pull)</b>”<br>
+    충돌은 사고가 아니라, <b>사람이 결정할 차례</b>라는 신호!</p>
     <button id="btnAgain">🎬 다시 보기</button>
   </div>
 </div>
@@ -160,75 +332,74 @@
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const stage=$('stage'), cap=$('caption');
+  const stage=$('stage'), cap=$('caption'), turb=$('turb');
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-  let run=0; // 재생 세대 (다시보기 시 이전 타임라인 중단용)
+  let run=0;
+
+  // ▶ 선이 쉬지 않고 꿈틀거리는 효과(boiling line): 노이즈 시드를 계속 교체
+  setInterval(()=>{turb.setAttribute('seed', 1+Math.floor(Math.random()*50));},130);
 
   function center(el){const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}
+  function mood(id,m){$(id).setAttribute('data-mood',m)}
   function bubble(el,anchor,text,scream){
     const p=center(anchor);
     el.classList.toggle('scream',!!scream);
     el.innerHTML=text;
-    el.style.left=Math.max(8,Math.min(innerWidth-el.offsetWidth-8,p.x-60))+'px';
-    // 위치 먼저 잡고 표시
-    el.style.top='-999px'; el.classList.add('show');
+    el.classList.add('show');
+    el.style.left=Math.max(8,Math.min(innerWidth-290,p.x-70))+'px';
     requestAnimationFrame(()=>{
-      const h=el.offsetHeight;
-      const isCloud=el.id==='bubG';
-      el.style.top=(isCloud? p.y+50 : p.y-h-96)+'px';
+      const h=el.offsetHeight, isCloud=el.id==='bubG';
+      el.style.top=(isCloud? p.y+58 : p.y-h-118)+'px';
     });
   }
   function hideBubbles(){['bubA','bubB','bubG'].forEach(i=>$(i).classList.remove('show'))}
-  async function fly(fromEl,toEl,emoji,label,dur=1100){
+  const BOX=`<svg viewBox="0 0 60 54"><path d="M6 20 L30 8 L54 20 L54 44 L30 52 L6 44 Z" fill="#d9a05b" stroke="#1c1408" stroke-width="4"/><path d="M6 20 L30 30 L54 20 M30 30 L30 52" fill="none" stroke="#1c1408" stroke-width="3.5"/></svg>`;
+  async function fly(fromEl,toEl,label,dur=1100){
     const a=center(fromEl),b=center(toEl);
     const p=document.createElement('div');p.className='pkg';
-    p.innerHTML=emoji+(label?`<span class="plabel">${label}</span>`:'');
-    p.style.left=a.x-20+'px';p.style.top=a.y-20+'px';p.style.transitionDuration=dur+'ms';
+    p.innerHTML=BOX+(label?`<span class="plabel">${label}</span>`:'');
+    p.style.left=a.x-22+'px';p.style.top=a.y-22+'px';p.style.transitionDuration=dur+'ms';
     stage.appendChild(p);
     await sleep(30);
-    p.style.left=b.x-20+'px';p.style.top=b.y-20+'px';
-    await sleep(dur);
-    p.remove();
+    p.style.left=b.x-22+'px';p.style.top=b.y-22+'px';p.style.transform='rotate(340deg)';
+    await sleep(dur);p.remove();
   }
-  async function bounce(fromEl,toEl,emoji,label){
+  async function bounce(fromEl,toEl,label){
     const a=center(fromEl),b=center(toEl);
     const p=document.createElement('div');p.className='pkg';
-    p.innerHTML=emoji+(label?`<span class="plabel">${label}</span>`:'');
-    p.style.left=a.x-20+'px';p.style.top=a.y-20+'px';p.style.transitionDuration='900ms';
+    p.innerHTML=BOX+(label?`<span class="plabel">${label}</span>`:'');
+    p.style.left=a.x-22+'px';p.style.top=a.y-22+'px';p.style.transitionDuration='850ms';
     stage.appendChild(p);
     await sleep(30);
-    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
-    p.style.left=mx+'px';p.style.top=my+'px';
-    await sleep(900);
-    p.style.transitionDuration='700ms';
-    p.style.left=a.x-20+'px';p.style.top=a.y+10+'px';
-    p.style.transform='rotate(360deg)';p.style.opacity='.3';
-    await sleep(700);p.remove();
+    p.style.left=(a.x+b.x)/2+'px';p.style.top=(a.y+b.y)/2+'px';
+    await sleep(850);
+    p.style.transitionDuration='650ms';
+    p.style.left=a.x-22+'px';p.style.top=a.y+16+'px';
+    p.style.transform='rotate(720deg)';p.style.opacity='.25';
+    await sleep(650);p.remove();
   }
-  function face(id,e){$(id).textContent=e}
-  function confetti(n=36){
+  const STAR=`<svg viewBox="0 0 24 24"><path d="M12 2 L15 9 L22 9 L16.5 13.5 L18.5 21 L12 16.5 L5.5 21 L7.5 13.5 L2 9 L9 9 Z" stroke="#1c1408" stroke-width="2"/></svg>`;
+  function confetti(n=34){
+    const cols=['#e8452c','#ffd93b','#2f7fe0','#18a566','#ff8fb3','#8a34d8'];
     for(let i=0;i<n;i++){
       const c=document.createElement('span');c.className='confetti';
-      c.textContent=['🎉','🎊','✨','⭐','💚','💙'][i%6];
+      c.innerHTML=STAR;c.querySelector('path').setAttribute('fill',cols[i%6]);
       c.style.left=Math.random()*100+'vw';
-      c.style.animationDuration=(1.6+Math.random()*1.8)+'s';
+      c.style.animationDuration=(1.6+Math.random()*1.9)+'s';
       c.style.animationDelay=(Math.random()*.8)+'s';
-      stage.appendChild(c);setTimeout(()=>c.remove(),4200);
+      stage.appendChild(c);setTimeout(()=>c.remove(),4400);
     }
   }
   async function caption(t){cap.style.opacity=0;await sleep(200);cap.innerHTML=t;cap.style.opacity=1}
 
   async function play(){
-    const my=++run;
-    const alive=()=>my===run;
-    // 초기화
+    const my=++run, alive=()=>my===run;
     hideBubbles();$('endcard').style.display='none';
     $('paper').classList.remove('show','fight','merged');$('boom').classList.remove('show');
-    face('waFace','🧑‍💻');face('wbFace','👩‍💻');face('cloudFace','☁️');
+    mood('wa','idle');mood('wb','idle');mood('cloud','idle');
     $('halfL').innerHTML='&lt;&lt;&lt; A의 문장';$('halfR').innerHTML='B의 문장 &gt;&gt;&gt;';
     $('wa').classList.remove('tremble');$('wb').classList.remove('tremble');
 
-    // 1장. 평화
     await caption('<b>제1장</b> — 평화로운 오후. 두 사람이 같은 파일의 <b>같은 문장</b>을 고치고 있다...');
     if(!alive())return;
     bubble($('bubA'),$('wa'),'이 문장, 내가 더 멋지게 고쳐야지~ ✍️');
@@ -236,69 +407,67 @@
     bubble($('bubB'),$('wb'),'후후, 이 문장은 내 스타일로 바꿔야겠어 ✍️');
     await sleep(2000);if(!alive())return;hideBubbles();
 
-    // 2장. A 먼저 push
     await caption('<b>제2장</b> — A가 먼저 <b>push</b>! 부지런한 자가 승리한다');
     if(!alive())return;
     $('wa').classList.add('jump');setTimeout(()=>$('wa').classList.remove('jump'),600);
+    mood('wa','party');
     bubble($('bubA'),$('wa'),'먼저 올린다~ 🚀 git push!');
-    await fly($('wa'),$('cloud'),'📦','commit');if(!alive())return;
-    face('cloudFace','⛅');
+    await fly($('wa'),$('cloud'),'commit');if(!alive())return;
+    mood('cloud','party');
+    $('cloud').classList.add('jump');setTimeout(()=>$('cloud').classList.remove('jump'),600);
     bubble($('bubG'),$('cloud'),'냠! 잘 받았습니다 ✅');
-    await sleep(1800);if(!alive())return;hideBubbles();
+    await sleep(1800);if(!alive())return;hideBubbles();mood('wa','idle');mood('cloud','idle');
 
-    // 3장. B push 거절
     await caption('<b>제3장</b> — 아무것도 모르는 B도 <b>push</b>... 그러나!');
     if(!alive())return;
     bubble($('bubB'),$('wb'),'나도 완성! git push~ 🚀');
-    await bounce($('wb'),$('cloud'),'📦','commit');if(!alive())return;
-    face('cloudFace','🌩️');
+    await bounce($('wb'),$('cloud'),'commit');if(!alive())return;
+    mood('cloud','angry');
     bubble($('bubG'),$('cloud'),'❌ 거절! 너, A가 올린 최신 버전 모르잖아! <b>(fetch first)</b>',true);
-    face('wbFace','😱');
+    mood('wb','shock');
     $('wb').classList.add('jump');setTimeout(()=>$('wb').classList.remove('jump'),600);
     await sleep(2600);if(!alive())return;hideBubbles();
 
-    // 4장. pull → 충돌
     await caption('<b>제4장</b> — B: “일단 받아와 보자” <b>git pull</b>... 그 순간!');
     if(!alive())return;
+    mood('wb','idle');mood('cloud','idle');
     bubble($('bubB'),$('wb'),'알았어 알았어~ git pull 📥');
-    await fly($('cloud'),$('wb'),'📦','A의 커밋');if(!alive())return;
+    await fly($('cloud'),$('wb'),'A의 커밋');if(!alive())return;
     hideBubbles();
     $('paper').classList.add('show');
     await sleep(500);if(!alive())return;
     $('boom').classList.add('show');stage.classList.add('shake');
     $('paper').classList.add('fight');
-    face('wbFace','😵');face('waFace','😮');
+    mood('wb','shock');mood('wa','shock');
     await sleep(600);stage.classList.remove('shake');if(!alive())return;
     await caption('<b>충돌(CONFLICT)!</b> — 같은 문장이 두 버전으로 갈라져 싸우기 시작했다');
     bubble($('bubG'),$('cloud'),'같은 줄을 서로 다르게 고쳤네요. <b>어느 쪽을 남길지는 사람이 정하세요!</b>');
     await sleep(3000);if(!alive())return;
     hideBubbles();$('boom').classList.remove('show');
 
-    // 5장. 해결
     await caption('<b>제5장</b> — B의 결단. 충돌 표시를 지우고 두 문장을 하나로 합친다');
     if(!alive())return;
-    face('wbFace','🥵');$('wb').classList.add('tremble');
+    mood('wa','idle');mood('wb','sweat');$('wb').classList.add('tremble');
     bubble($('bubB'),$('wb'),'제가... 합치겠습니다 💦 타닥타닥 ⌨️');
     await sleep(2300);if(!alive())return;
     $('wb').classList.remove('tremble');
     $('paper').classList.remove('fight');$('paper').classList.add('merged');
     $('halfL').innerHTML='A와 B의 문장을';$('halfR').innerHTML='하나로 합침 ❤️';
-    face('wbFace','😤');
+    mood('wb','idle');
     hideBubbles();
     bubble($('bubB'),$('wb'),'add → commit! <b>합의문(Merge Commit)</b> 완성 📝');
     await sleep(2400);if(!alive())return;hideBubbles();
 
-    // 6장. 해피엔딩
     await caption('<b>제6장</b> — 다시 push! 이번엔 통과. A도 pull로 합의문을 받는다');
     if(!alive())return;
-    await fly($('wb'),$('cloud'),'📦','merge commit');if(!alive())return;
-    face('cloudFace','🌤️');
+    await fly($('wb'),$('cloud'),'merge commit');if(!alive())return;
+    mood('cloud','party');
     bubble($('bubG'),$('cloud'),'완벽합니다 ✅ 평화 협정 접수!');
     await sleep(1600);if(!alive())return;
     bubble($('bubA'),$('wa'),'나도 git pull! 📥');
-    await fly($('cloud'),$('wa'),'📦','최종본');if(!alive())return;
+    await fly($('cloud'),$('wa'),'최종본');if(!alive())return;
     $('paper').classList.remove('show');
-    face('waFace','🥳');face('wbFace','🥳');face('cloudFace','😎');
+    mood('wa','party');mood('wb','party');mood('cloud','proud');
     hideBubbles();confetti();
     await caption('🎉 <b>해피엔딩</b> — 세 저장소 모두 같은 최신 커밋! 충돌은 오류가 아니라 협업의 일부');
     await sleep(3200);if(!alive())return;

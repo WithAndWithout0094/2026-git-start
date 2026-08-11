@@ -68,3 +68,9 @@ sequenceDiagram
 | 올리기 | `push` | 원격이 앞서 있으면 **거절됨** |
 | 받아오기 | `pull` (= `fetch` + `merge`) | 겹치면 **충돌**, 안 겹치면 자동 병합 |
 | 충돌 해결 | 파일 수정 → `add` → `commit` → `push` | Merge Commit으로 마무리 |
+
+---
+
+## 🧊 3D 버전
+
+[git-collab-3d.html](git-collab-3d.html) — 내려받아 브라우저에서 열면 **드래그로 회전**하는 3D 시퀀스 다이어그램을 볼 수 있습니다.

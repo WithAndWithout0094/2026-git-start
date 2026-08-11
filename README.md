@@ -2,4 +2,5 @@
 
 로컬 컴퓨터에서 추가한 내용입니다.
 hello
-testing 
+testing # 2026_aio2_python-basic
+# 2026_aio2_python-basic
